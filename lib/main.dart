@@ -1,66 +1,83 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Пример виджетов Flutter'),
+        ),
+        body: MyWidget(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
+class MyWidget extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyWidgetState createState() => _MyWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MyWidgetState extends State<MyWidget> {
+  String _displayText = '';
+  TextEditingController _textController = TextEditingController();
 
-  void _incrementCounter() {
+  void _updateText() {
     setState(() {
-      _counter++;
+      _displayText = _textController.text.isNotEmpty
+          ? _textController.text
+          : 'Обновить';
+    });
+  }
+
+  void _clearText() {
+    setState(() {
+      _textController.clear();
+      _displayText = '';
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-
-      body: Center(
-
-        child: Column(
-
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: _textController,
+            decoration: InputDecoration(
+              hintText: 'Введите текст тут...',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+        SizedBox(height: 20.0),
+        Text(
+          _displayText,
+          style: TextStyle(fontSize: 24.0),
+        ),
+        SizedBox(height: 20.0),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Кравцов Никита Андреевич, БСБО-11-22, 22Б1274',
-              style: Theme.of(context).textTheme.headlineMedium,
+            ElevatedButton(
+              onPressed: _updateText,
+              child: Text('Обновить текст'),
+            ),
+            SizedBox(width: 10.0),
+            ElevatedButton(
+              onPressed: _clearText,
+              child: Text('Очистить текст'),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }
